@@ -140,8 +140,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Google OAuth credentials are read from .env and must never be committed.
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('CLIENT_ID')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('CLIENT_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('CLIENT_ID', default='')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('CLIENT_SECRET', default='')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'company:home'
 SOCIAL_AUTH_LOGIN_ERROR_URL = 'account:login'
