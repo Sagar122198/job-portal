@@ -1,0 +1,12 @@
+.env
+*.env
+__pycache__/
+*.py[cod]
+db.sqlite3
+db.sqlite3-journal
+media/
+.git/
+.gitignore
+.vscode/
+.idea/
+*.md

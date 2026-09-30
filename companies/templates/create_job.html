@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Job{% endblock %}
+
+{% block body %}
+<main class="min-h-screen bg-slate-50 py-8 sm:py-12">
+    <form method="post" class="mx-auto max-w-6xl px-4 sm:px-6" id="jobForm">
+        {% csrf_token %}
+        <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <header class="border-b border-slate-200 px-6 py-6 sm:px-8">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Recruiter dashboard</p>
+                        <h1 class="mt-2 text-2xl font-bold text-slate-900">Create New Job</h1>
+                        <p class="mt-1 text-sm text-slate-500">Create a clear, compelling job post for the right candidates.</p>
+                    </div>
+                    <span class="inline-flex w-fit items-center rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">Step 1 of 1</span>
+                </div>
+            </header>
+
+            <div class="space-y-10 px-6 py-8 sm:px-8">
+                {% if form.errors %}<div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">Please correct the highlighted fields before posting.</div>{% endif %}
+
+                <section>
+                    <div class="mb-6 border-b border-slate-200 pb-3"><h2 class="text-lg font-bold text-slate-900">Company information</h2><p class="mt-1 text-sm text-slate-500">Introduce the company behind this opportunity.</p></div>
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <div><label for="{{ form.company_name.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company name</label>{{ form.company_name }}{{ form.company_name.errors }}</div>
+                        <div><label for="{{ form.company_website.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company website</label>{{ form.company_website }}{{ form.company_website.errors }}</div>
+                        <div class="md:col-span-2"><label for="{{ form.company_discription.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company description</label>{{ form.company_discription }}{{ form.company_discription.errors }}</div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="mb-6 border-b border-slate-200 pb-3"><h2 class="text-lg font-bold text-slate-900">Job details</h2><p class="mt-1 text-sm text-slate-500">Define the role, working style, and candidate requirements.</p></div>
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Job title</label>{{ form.job_title }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Job category</label>{{ form.job_category }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Employment type</label>{{ form.employment_type }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Work mode</label>{{ form.work_mode }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Experience required (years)</label>{{ form.job_experience }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Education level</label>{{ form.education_level }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Number of vacancies</label>{{ form.number_vacancies }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Application deadline</label>{{ form.application_deadline }}</div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="mb-6 border-b border-slate-200 pb-3"><h2 class="text-lg font-bold text-slate-900">Salary &amp; location</h2><p class="mt-1 text-sm text-slate-500">Help candidates understand the compensation and timeline.</p></div>
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Minimum salary</label>{{ form.minimum_salary }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Maximum salary</label>{{ form.job_stipend }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Job location</label>{{ form.job_location }}</div>
+                        <div><label class="mb-2 block text-sm font-semibold text-slate-700">Joining date</label>{{ form.job_starting_date }}</div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="mb-6 border-b border-slate-200 pb-3"><h2 class="text-lg font-bold text-slate-900">Required skills</h2><p class="mt-1 text-sm text-slate-500">Type a skill and press Enter to add it.</p></div>
+                    {{ form.job_skills.as_hidden }}
+                    <div id="skillBox" class="flex min-h-[58px] flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-100">
+                        <input id="skillInput" type="text" class="min-w-[160px] flex-1 border-0 px-2 py-1 text-sm outline-none" placeholder="e.g. Python, React, PostgreSQL">
+                    </div>
+                </section>
+
+                <section>
+                    <div class="mb-6 border-b border-slate-200 pb-3"><h2 class="text-lg font-bold text-slate-900">Job description</h2><p class="mt-1 text-sm text-slate-500">Describe responsibilities, impact, and what makes this role exciting.</p></div>
+                    {{ form.job_discription.as_hidden }}
+                    <div class="overflow-hidden rounded-xl border border-slate-200">
+                        <div class="flex flex-wrap gap-1 border-b border-slate-200 bg-slate-50 p-2">
+                            <button type="button" data-command="bold" class="rounded-lg px-3 py-1.5 text-sm font-bold hover:bg-white">B</button>
+                            <button type="button" data-command="italic" class="rounded-lg px-3 py-1.5 text-sm italic hover:bg-white">I</button>
+                            <button type="button" data-command="insertUnorderedList" class="rounded-lg px-3 py-1.5 text-sm hover:bg-white">• List</button>
+                            <button type="button" data-command="insertOrderedList" class="rounded-lg px-3 py-1.5 text-sm hover:bg-white">1. List</button>
+                            <button type="button" id="linkButton" class="rounded-lg px-3 py-1.5 text-sm hover:bg-white">Link</button>
+                        </div>
+                        <div id="descriptionEditor" contenteditable="true" class="min-h-[250px] p-4 text-sm leading-6 text-slate-700 outline-none" data-placeholder="Write a detailed job description..."></div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="mb-6 border-b border-slate-200 pb-3"><h2 class="text-lg font-bold text-slate-900">Benefits</h2><p class="mt-1 text-sm text-slate-500">Select the benefits available to this role.</p></div>
+                    {{ form.benefits.as_hidden }}
+                    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Health Insurance" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Health Insurance</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Flexible Working Hours" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Flexible Working Hours</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Paid Leave" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Paid Leave</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Remote Work" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Remote Work</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Learning Budget" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Learning Budget</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Free Meals" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Free Meals</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Performance Bonus" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Performance Bonus</label>
+                        <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700"><input type="checkbox" value="Provident Fund" class="benefit-check h-4 w-4 rounded border-slate-300 text-blue-600">Provident Fund</label>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="sticky bottom-0 flex flex-wrap justify-end gap-3 border-t border-slate-200 bg-white px-6 py-4 shadow-[0_-8px_20px_rgba(15,23,42,0.06)] sm:px-8">
+                <a href="{% url 'company:jobs' %}" class="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancel</a>
+                {% comment %} <button type="button" class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Save draft</button>
+                <button type="button" id="previewButton" class="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700 hover:bg-blue-100">Preview job</button> {% endcomment %}
+                <button type="submit" class="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">Post job</button>
+            </footer>
+        </div>
+    </form>
+</main>
+
+<style>#descriptionEditor:empty:before{content:attr(data-placeholder);color:#94a3b8;pointer-events:none}</style>
+<script>
+(() => {
+    const skillInput = document.getElementById('skillInput'), skillField = document.getElementById('{{ form.job_skills.id_for_label }}'), skillBox = document.getElementById('skillBox');
+    let skills = skillField.value ? skillField.value.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const renderSkills = () => {
+        skillBox.querySelectorAll('[data-skill]').forEach(el => el.remove());
+        skills.forEach(skill => { const chip = document.createElement('button'); chip.type = 'button'; chip.dataset.skill = skill; chip.className = 'rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700'; chip.textContent = skill + ' ×'; chip.onclick = () => { skills = skills.filter(item => item !== skill); renderSkills(); }; skillBox.insertBefore(chip, skillInput); });
+        skillField.value = skills.join(', ');
+    };
+    skillInput.addEventListener('keydown', event => { if (event.key === 'Enter' && skillInput.value.trim()) { event.preventDefault(); skillInput.value.split(',').forEach(skill => { skill = skill.trim(); if (skill && !skills.includes(skill)) skills.push(skill); }); skillInput.value = ''; renderSkills(); } });
+    renderSkills();
+
+    const editor = document.getElementById('descriptionEditor'), descriptionField = document.getElementById('{{ form.job_discription.id_for_label }}');
+    editor.innerHTML = descriptionField.value;
+    document.querySelectorAll('[data-command]').forEach(button => button.addEventListener('click', () => { document.execCommand(button.dataset.command, false, null); editor.focus(); }));
+    document.getElementById('linkButton').addEventListener('click', () => { const url = window.prompt('Enter link URL'); if (url) document.execCommand('createLink', false, url); });
+    document.querySelectorAll('.benefit-check').forEach(box => box.addEventListener('change', () => { document.getElementById('{{ form.benefits.id_for_label }}').value = JSON.stringify([...document.querySelectorAll('.benefit-check:checked')].map(item => item.value)); }));
+    document.getElementById('jobForm').addEventListener('submit', () => { descriptionField.value = editor.innerHTML; });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load profile_filters %}
+
+{% block title %}{{ profile.company_name|default:user_profile.username }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50">
+    <div class="relative h-52 bg-gradient-to-r from-blue-700 to-indigo-700">
+        {% if profile.cover_banner %}<img src="{{ profile.cover_banner.url }}" alt="{{ profile.company_name }} banner"
+            class="h-full w-full object-cover">{% endif %}
+    </div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div
+            class="relative -mt-16 flex flex-col gap-4 rounded-lg bg-white p-6 shadow-sm sm:flex-row sm:items-end sm:justify-between">
+            <div class="flex flex-col sm:flex-row items-center sm:items-end gap-4">
+                {% if profile.company_logo %}<img src="{{ profile.company_logo.url }}"
+                    alt="{{ profile.company_name }} logo"
+                    class="h-24 w-24 rounded-lg border-4 border-white bg-white object-cover shadow">{% else %}<div
+                    class="flex h-24 w-24 items-center justify-center rounded-lg border-4 border-white bg-blue-600 text-3xl font-bold text-white shadow">
+                    {{ profile.company_name|default:user_profile.username|slice:':1'|upper }}</div>{% endif %}
+                <div>
+                    <div class="flex items-center gap-2"><h1 class="text-2xl font-bold text-gray-900">{{ profile.company_name|default:user_profile.username }}</h1>{% if profile.company_verification_status == 'verified' %}<span title="Verified company" class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">✓</span>{% endif %}</div>
+                    {% if profile.tagline %}<p class="mt-1 text-gray-600">{{ profile.tagline }}</p>{% endif %}
+                    {% if profile.headquarters_location %}<p class="mt-2 text-sm text-gray-500">{{ profile.headquarters_location }}</p>{% endif %}
+                </div>
+            </div>
+            <div class="flex flex-col gap-3 flex-shrink-0">
+                {% if is_own_profile %}
+                    {% if profile.company_verification_status == 'verified' %}<span class="rounded-lg bg-blue-50 px-4 py-2 text-center text-sm font-semibold text-blue-700">✓ Company verified</span>{% elif profile.company_verification_status == 'pending' %}<span class="rounded-lg bg-amber-50 px-4 py-2 text-center text-sm font-semibold text-amber-700">Verification pending</span>{% else %}<form action="{% url 'profiles:submit-company-verification' %}" method="post">{% csrf_token %}<button type="submit" class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">Verify company</button></form>{% endif %}
+                    <a href="{% url 'profiles:profile-update' %}"
+                    class="rounded-lg border-2 border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50">Edit
+                    profile</a>
+                    <form action="{% url 'account:logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="px-4 py-2 border-2 border-red-600 text-red-600 font-semibold text-sm rounded-lg hover:bg-red-100 transition">
+                            Log Out
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="grid gap-6 py-6 lg:grid-cols-3">
+            <main class="space-y-6 lg:col-span-2">
+                {% if profile.about_company %}
+                <section class="rounded-lg border border-gray-200 bg-white p-6">
+                    <h2 class="mb-3 text-lg font-bold text-gray-900">About {{ profile.company_name | default:'the company'}}</h2>
+                    <p class="whitespace-pre-line text-sm leading-relaxed text-gray-700">{{ profile.about_company }}</p>
+                </section>
+                {% endif %}
+                <section class="rounded-lg border border-gray-200 bg-white p-6">
+                    <h2 class="mb-4 text-lg font-bold text-gray-900">Active job listings</h2>
+                    {% for job in active_jobs%}
+                    <article class="border-b border-gray-100 py-3 last:border-0">
+                        <h3 class="font-semibold text-gray-900">{{ job.job_title }}</h3>
+                        <p class="mt-1 text-sm text-gray-600">{{ job.job_location }}{% if job.job_experience %} · {{
+                            job.job_experience }} years experience{% endif %}</p>
+                        <p class="mt-1 text-sm text-gray-500">{{ job.job_discription|truncatechars:150 }}</p>
+                    </article>
+                    {% empty %}
+                    <p class="text-sm text-gray-500">No active job listings yet.</p>
+                    {% endfor %}
+                </section>
+                {% if profile.perks_benefits %}<section class="rounded-lg border border-gray-200 bg-white p-6">
+                    <h2 class="mb-3 text-lg font-bold text-gray-900">Perks &amp; benefits</h2>
+                    <div class="flex flex-wrap gap-2">{% for perk in profile.perks_benefits|split:',' %}<span
+                            class="rounded-full bg-green-50 px-3 py-1 text-sm text-green-700">
+                            {{ perk|trim }}</span>{%endfor %}</div>
+                </section>
+                {% endif %}
+            </main>
+            <aside class="space-y-4">
+                <section class="rounded-lg border border-gray-200 bg-white p-5">
+                    <h2 class="mb-3 text-sm font-bold text-gray-900">COMPANY DETAILS</h2>
+                    <dl class="space-y-3 text-sm">{% if profile.industry %}<div>
+                            <dt class="text-gray-500">Industry</dt>
+                            <dd class="text-gray-900">{{ profile.industry }}</dd>
+                        </div>{% endif %}{% if profile.company_size %}<div>
+                            <dt class="text-gray-500">Company size</dt>
+                            <dd class="text-gray-900">{{ profile.company_size }}</dd>
+                        </div>{% endif %}{% if profile.company_type %}<div>
+                            <dt class="text-gray-500">Company type</dt>
+                            <dd class="text-gray-900">{{ profile.company_type }}</dd>
+                        </div>{% endif %}{% if profile.founded_year %}<div>
+                            <dt class="text-gray-500">Founded</dt>
+                            <dd class="text-gray-900">{{ profile.founded_year }}</dd>
+                        </div>{% endif %}</dl>
+                </section>
+                {% if profile.official_website or profile.company_email or profile.x_url %}
+                <section class="rounded-lg border border-gray-200 bg-white p-5">
+                    <h2 class="mb-3 text-sm font-bold text-gray-900">CONNECT</h2>
+                    <div class="space-y-2 break-all text-sm">
+                        {% if profile.official_website %}
+                        <a href="{{ profile.official_website }}" target="_blank" rel="noopener noreferrer" class="block text-blue-600 hover:underline">Website</a>
+                        {% endif %}
+                        {% if profile.company_email %}
+                        <a href="mailto:{{ profile.company_email }}" class="block text-blue-600 hover:underline">{{ profile.company_email }}</a>
+                        {% endif %}
+                        {% if profile.x_url %}
+                        <a href="{{ profile.x_url }}" target="_blank" rel="noopener noreferrer" class="block text-blue-600 hover:underline">X / Twitter</a>
+                        {% endif %}
+                    </div>
+                </section>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}

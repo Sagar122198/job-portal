@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Sign Up | Job Portal{% endblock title %}
+
+{% block nav %}
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg font-bold">JP</span>
+                    <a href="{% url 'company:home' %}" class="text-xl font-bold text-gray-900">JobPortal</a>
+                </div>
+
+                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-600 flex-wrap">
+                    <span>Already have an account?</span>
+                    <a href="{% url 'account:login' %}" class="font-semibold text-blue-600 hover:text-blue-700">Log in</a>
+                    <form method="post" action="{% url 'social:begin' 'google-oauth2' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="font-semibold text-blue-600 hover:text-blue-700">Continue with Google</button>
+                    </form>
+                </div>
+            </div>
+{% endblock %}
+
+{% block body %}
+<main class="flex-grow bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-200 grid grid-cols-1 lg:grid-cols-2">
+            <div class="bg-blue-600 text-white p-10 lg:p-14 flex flex-col justify-between">
+                <div>
+                    <span class="inline-flex items-center gap-2 uppercase tracking-[0.25em] text-xs font-semibold bg-white/10 px-3 py-2 rounded-full">
+                        Join JobPortal
+                    </span>
+                    <h1 class="mt-8 text-2xl sm:text-4xl font-extrabold tracking-tight">
+                        Create your account
+                    </h1>
+                    <p class="mt-4 text-blue-100 text-sm leading-relaxed">
+                        Register now to post jobs, manage applicants, and grow your hiring pipeline with the same polished portal experience.
+                    </p>
+                </div>
+                <div class="mt-10 text-sm text-blue-100/90">
+                    <p class="font-semibold">Need support?</p>
+                    <p class="mt-2">Email us at <a href="mailto:support@jobportal.local" class="underline hover:text-white">support@jobportal.local</a></p>
+                </div>
+            </div>
+
+            <div class="p-8 lg:p-12">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Create your account</h2>
+                    <p class="mt-2 text-sm text-gray-500">Fill in the details below to register.</p>
+                </div>
+
+                <form method="post" class="space-y-6 custom-form-style">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            Please fix the highlighted fields.
+                        </div>
+                    {% endif %}
+
+                    <div class="space-y-4">
+                        {{ form.as_p }}
+                    </div>
+
+                    <button type="submit" class="w-full inline-flex justify-center items-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700">
+                        Sign Up
+                    </button>
+
+                    <p class="text-center text-sm text-gray-500">
+                        Already have an account? <a href="{% url 'account:login' %}" class="font-semibold text-blue-600 hover:text-blue-700">Log in</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock body %}

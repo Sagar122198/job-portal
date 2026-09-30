@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Company Profile{% endblock %}
+
+{% block body %}
+<main class="min-h-screen bg-slate-50 py-10 sm:py-12">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <header class="mb-8">
+            <a href="{% url 'profiles:profile' username=request.user.username %}" class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700">← Back to company profile</a>
+            <h1 class="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Update Company Profile</h1>
+            <p class="mt-2 text-slate-600">Share accurate details so candidates can get to know your company.</p>
+        </header>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-7">
+            {% csrf_token %}
+
+            <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <div class="mb-6 border-b border-slate-200 pb-4">
+                    <h2 class="text-xl font-bold text-slate-900">Branding</h2>
+                    <p class="mt-1 text-sm text-slate-500">Use clear visuals that candidates will recognize.</p>
+                </div>
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div>
+                        <label for="{{ form.profile_picture.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Your Profile Photo</label>
+                        {{ form.profile_picture }}
+                        {{ form.profile_picture.errors }}
+                        <p class="mt-2 text-xs text-slate-500">Shown on jobs you post.</p>
+                    </div>
+                    <div>
+                        <label for="{{ form.company_logo.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company Logo</label>
+                        {{ form.company_logo }}
+                        {{ form.company_logo.errors }}
+                    </div>
+                    <div>
+                        <label for="{{ form.cover_banner.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Cover Banner</label>
+                        {{ form.cover_banner }}
+                        {{ form.cover_banner.errors }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <div class="mb-6 border-b border-slate-200 pb-4">
+                    <h2 class="text-xl font-bold text-slate-900">Company Information</h2>
+                    <p class="mt-1 text-sm text-slate-500">The core information displayed on your company profile.</p>
+                </div>
+                <div class="grid gap-x-6 gap-y-5 md:grid-cols-2">
+                    <div><label for="{{ form.company_name.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company Name</label>{{ form.company_name }}{{ form.company_name.errors }}</div>
+                    <div><label for="{{ form.tagline.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Tagline</label>{{ form.tagline }}{{ form.tagline.errors }}</div>
+                    <div><label for="{{ form.industry.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Industry</label>{{ form.industry }}{{ form.industry.errors }}</div>
+                    <div><label for="{{ form.company_size.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company Size</label>{{ form.company_size }}{{ form.company_size.errors }}</div>
+                    <div><label for="{{ form.company_type.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company Type</label>{{ form.company_type }}{{ form.company_type.errors }}</div>
+                    <div><label for="{{ form.founded_year.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Founded Year</label>{{ form.founded_year }}{{ form.founded_year.errors }}</div>
+                    <div class="md:col-span-2"><label for="{{ form.headquarters_location.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Headquarters Location</label>{{ form.headquarters_location }}{{ form.headquarters_location.errors }}</div>
+                    <div class="md:col-span-2"><label for="{{ form.about_company.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">About the Company</label>{{ form.about_company }}{{ form.about_company.errors }}</div>
+                </div>
+            </section>
+
+            <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <div class="mb-6 border-b border-slate-200 pb-4"><h2 class="text-xl font-bold text-slate-900">Contact &amp; Social Links</h2><p class="mt-1 text-sm text-slate-500">These details support company verification and candidate enquiries.</p></div>
+                <div class="grid gap-x-6 gap-y-5 md:grid-cols-2">
+                    <div><label for="{{ form.official_website.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Official Website</label>{{ form.official_website }}{{ form.official_website.errors }}</div>
+                    <div><label for="{{ form.company_email.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">Company Email</label>{{ form.company_email }}{{ form.company_email.errors }}</div>
+                    <div class="md:col-span-2"><label for="{{ form.x_url.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-700">X / Twitter URL</label>{{ form.x_url }}{{ form.x_url.errors }}</div>
+                </div>
+            </section>
+
+            <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <div class="mb-5 border-b border-slate-200 pb-4"><h2 class="text-xl font-bold text-slate-900">Perks &amp; Benefits</h2><p class="mt-1 text-sm text-slate-500">Separate each benefit with a comma.</p></div>
+                <label for="{{ form.perks_benefits.id_for_label }}" class="sr-only">Perks and benefits</label>{{ form.perks_benefits }}{{ form.perks_benefits.errors }}
+            </section>
+
+            <div class="sticky bottom-0 flex flex-wrap justify-end gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-lg">
+                <a href="{% url 'profiles:profile' username=request.user.username %}" class="rounded-xl border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</a>
+                <button type="submit" class="rounded-xl bg-blue-600 px-7 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

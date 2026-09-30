@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Update Job | {{ object.company_name }}{% endblock title %}
+
+{% block body %}
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
+    <div class="mb-6">
+        <a href="{% url 'company:jobs' %}" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-blue-600 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Job Listings
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-100">
+            <div>
+                <span class="inline-block text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-md mb-2">
+                    {{ object.company_name }}
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Update Job</h1>
+                <p class="text-sm text-gray-500 italic mt-1">Make updates to your job posting and save the latest details.</p>
+            </div>
+        </div>
+
+        <!-- MAIN UPDATE FORM -->
+        <form method="post" class="space-y-8 mt-8 custom-form-style">
+            {% csrf_token %}
+            <div class="space-y-8">
+                <section class="space-y-4">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500 font-semibold">Company profile</p>
+                    <div class="grid gap-6">
+                        <div class="sm:col-span-2">
+                            {{ form.company_name.label_tag }}
+                            {{ form.company_name }}
+                        </div>
+                        <div class="sm:col-span-2">
+                            {{ form.company_discription.label_tag }}
+                            {{ form.company_discription }}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500 font-semibold">Job details</p>
+                    <div class="grid gap-6">
+                        <div class="sm:col-span-2">
+                            {{ form.job_title.label_tag }}
+                            {{ form.job_title }}
+                        </div>
+                        <div class="sm:col-span-2">
+                            {{ form.job_discription.label_tag }}
+                            {{ form.job_discription }}
+                        </div>
+                        <div class="sm:col-span-2">
+                            {{ form.job_skills.label_tag }}
+                            {{ form.job_skills }}
+                        </div>
+                        <div class="sm:col-span-2">
+                            {{ form.job_location.label_tag }}
+                            {{ form.job_location }}
+                        </div>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500 font-semibold">Requirements & logistics</p>
+                    <div class="grid gap-6 sm:grid-cols-2">
+                        <div>
+                            {{ form.job_experience.label_tag }}
+                            {{ form.job_experience }}
+                        </div>
+                        <div>
+                            {{ form.job_starting_date.label_tag }}
+                            {{ form.job_starting_date }}
+                        </div>
+                        <div class="sm:col-span-2">
+                            {{ form.job_stipend.label_tag }}
+                            {{ form.job_stipend }}
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ACTION BUTTONS BAR -->
+            <div class="pt-6 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <!-- Delete Trigger Button (Notice type="button" and onclick) -->
+                <button type="button" 
+                        onclick="openDeleteModal('deleteModal')"
+                        class="inline-flex items-center justify-center rounded-xl bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-red-500/20 transition hover:bg-red-700 w-full sm:w-auto">
+                    Delete Job
+                </button>
+
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-base font-bold text-gray-900">Save your updates</p>
+                        <p class="text-xs text-gray-500">Any changes will appear immediately in the job listing.</p>
+                    </div>
+                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700 w-full sm:w-auto">
+                        Update Job
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<!-- CONFIRMATION MODAL (Placed outside the main form) -->
+<div id="deleteModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+        <!-- Warning Icon -->
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+        </div>
+
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Are you sure?</h3>
+        <p class="text-sm text-gray-500 mb-6">
+            This action cannot be undone. This job posting will be permanently removed.
+        </p>
+
+        <!-- Modal Actions -->
+        <div class="flex justify-center gap-3">
+            <button type="button" 
+                    onclick="closeDeleteModal('deleteModal')" 
+                    class="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition">
+                Cancel
+            </button>
+
+            <!-- Separate POST Form for Deletion -->
+            <form action="{% url 'company:delete' object.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition">
+                    Yes, Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}

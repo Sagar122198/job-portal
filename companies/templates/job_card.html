@@ -1,0 +1,176 @@
+{% load humanize %}
+{% load job_extras %}
+{%comment%}
+    =====================================================================
+    LARGE HORIZONTAL JOB CARD — Find Jobs Page
+    Two-column: 22% company panel | 78% job detail panel
+    =====================================================================
+{%endcomment%}
+<article class="jc" data-job-card>
+
+    <!-- ==================== LEFT PANEL — Company ==================== -->
+    <aside class="jc__left">
+        <!-- Company Logo -->
+        <a href="{% url 'profiles:profile' username=job.posted_by.username %}" class="jc__logo" aria-label="View {{ job.company_name }} profile">
+            {% if job.posted_by.profile.company_logo %}
+                <img src="{{ job.posted_by.profile.company_logo.url }}" alt="{{ job.company_name }} logo">
+            {% elif job.posted_by.profile.profile_picture %}
+                <img src="{{ job.posted_by.profile.profile_picture.url }}" alt="{{ job.company_name }}">
+            {% else %}
+                <span class="jc__logo-initial">{{ job.company_name|slice:":1"|upper }}</span>
+            {% endif %}
+        </a>
+
+        <!-- Company Name -->
+        <p class="jc__company-name">{{ job.company_name }}</p>
+
+        <!-- Company Facts -->
+        <ul class="jc__company-facts">
+            <li>
+                <span class="jc__fact-icon">📍</span>
+                {% if job.posted_by.profile.headquarters_location %}
+                    {{ job.posted_by.profile.headquarters_location }}
+                {% else %}
+                    {{ job.job_location|default:"Remote" }}
+                {% endif %}
+            </li>
+            {% if job.posted_by.profile.industry %}
+            <li>
+                <span class="jc__fact-icon">🏭</span>
+                {{ job.posted_by.profile.industry }}
+            </li>
+            {% endif %}
+            {% if job.posted_by.profile.company_size %}
+            <li>
+                <span class="jc__fact-icon">👥</span>
+                {{ job.posted_by.profile.company_size }} employees
+            </li>
+            {% endif %}
+            <li>
+                <span class="jc__fact-icon">📅</span>
+                {{ job.job_starting_date }}
+            </li>
+        </ul>
+
+        <!-- Posted Date -->
+        <p class="jc__posted">
+            <span>🕒</span> Recently posted
+        </p>
+    </aside>
+
+    <!-- ==================== RIGHT PANEL — Job Details ==================== -->
+    <section class="jc__right">
+
+        <!-- ROW 1 — Header: Badges + Title + Icons + Salary -->
+        <div class="jc__header">
+            <div class="jc__header-left">
+                <div class="jc__badges">
+                    <span class="jc__badge jc__badge--new">🔥 New</span>
+                    {% if job.posted_by.profile.company_verification_status == 'verified' %}
+                    <span class="jc__badge jc__badge--featured">⭐ Featured</span>
+                    {% endif %}
+                </div>
+                <h2 class="jc__title js-jobTitle">
+                    <a href="{% url 'company:detail' job.pk %}">{{ job.job_title }}</a>
+                </h2>
+            </div>
+            <div class="jc__header-right">
+                <!-- Save Job -->
+                <button type="button" class="jc__icon-btn jc__icon-btn--save" aria-label="Save job" data-save-btn>
+                    <span class="jc__heart">♡</span>
+                </button>
+                <!-- Share -->
+                <button type="button" class="jc__icon-btn" aria-label="Share job" data-share-btn data-url="{% url 'company:detail' job.pk %}">
+                    <span>⤴</span>
+                    <span class="jc__tooltip">Copied!</span>
+                </button>
+                <!-- More Options -->
+                <div class="jc__more-wrap">
+                    <button type="button" class="jc__icon-btn" aria-label="More options" data-more-btn>
+                        <span>⋮</span>
+                    </button>
+                    <div class="jc__more-dropdown" data-more-dropdown>
+                        <a href="{% url 'company:detail' job.pk %}">📄 View Full Details</a>
+                        {% if job.company_website %}
+                        <a href="{{ job.company_website }}" target="_blank" rel="noopener">🌐 Company Website</a>
+                        {% endif %}
+                        <button type="button" data-report-btn>🚩 Report Job</button>
+                    </div>
+                </div>
+                <!-- Salary -->
+                <span class="jc__salary">₹{{ job.job_stipend|intcomma }}</span>
+            </div>
+        </div>
+
+        <!-- ROW 2 — Metadata inline chips -->
+        <div class="jc__meta">
+            <span class="jc__meta-item">
+                <span class="jc__meta-icon">📍</span> {{ job.job_location|default:"Remote" }}
+            </span>
+            <span class="jc__meta-item">
+                <span class="jc__meta-icon">💼</span> {{ job.get_employment_type_display }}
+            </span>
+            <span class="jc__meta-item">
+                <span class="jc__meta-icon">🏢</span> {{ job.get_work_mode_display }}
+            </span>
+            <span class="jc__meta-item">
+                <span class="jc__meta-icon">🧑</span> {{ job.job_experience }}+ yrs
+            </span>
+            {% if job.number_vacancies > 1 %}
+            <span class="jc__meta-item">
+                <span class="jc__meta-icon">👥</span> {{ job.number_vacancies }} vacancies
+            </span>
+            {% endif %}
+            {% if job.education_level %}
+            <span class="jc__meta-item">
+                <span class="jc__meta-icon">🎓</span> {{ job.education_level }}
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- ROW 3 — Divider -->
+        <hr class="jc__divider">
+
+        <!-- ROW 4 — Job Summary (2-line clamped, HTML stripped) -->
+        <p class="jc__summary">{{ job.job_discription|striptags|truncatewords:40 }}</p>
+
+        <!-- ROW 5 — Skill Chips -->
+        {% if job.job_skills %}
+        <div class="jc__skills" data-skills-container>
+            {% for skill in job.job_skills|split_skills %}
+                <span class="jc__skill" data-skill>{{ skill }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- ROW 6 — Footer: Info + Action Buttons -->
+        <div class="jc__footer">
+            <div class="jc__footer-info">
+                <span>🕒 Recently posted</span>
+                {% if job.application_deadline %}
+                <span>📅 Apply before {{ job.application_deadline|date:"M d, Y" }}</span>
+                {% endif %}
+            </div>
+            <div class="jc__footer-actions">
+                {% if request.user.is_authenticated and request.user.role == 'job_seeker' %}
+                    {% if job.pk in submitted_job_ids %}
+                        <span class="jc__btn jc__btn--submitted">✓ Submitted</span>
+                    {% else %}
+                        <a href="{% url 'company:apply' job.pk %}" class="jc__btn jc__btn--primary">Apply Now →</a>
+                    {% endif %}
+                {% elif request.user.is_authenticated and request.user == job.posted_by %}
+                    <a href="{% url 'company:update' job.pk %}" class="jc__btn jc__btn--edit">✏️ Edit Job</a>
+                    {% if is_manage_page %}
+                    <button type="button" class="jc__btn jc__btn--primary" onclick="openApplicantsDrawer({{ job.pk }})">
+                        👥 View Applicants
+                    </button>
+                    {% endif %}
+                {% elif not request.user.is_authenticated %}
+                    <a href="{% url 'account:login' %}" class="jc__btn jc__btn--primary">Log in to Apply →</a>
+                {% endif %}
+                <a href="{% url 'company:detail' job.pk %}" class="jc__btn jc__btn--secondary">View Details</a>
+            </div>
+        </div>
+
+    </section>
+</article>

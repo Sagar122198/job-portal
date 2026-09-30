@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Log In | Job Portal{% endblock title %}
+
+{% block nav %}
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white text-lg font-bold">JP</span>
+                    <a href="{% url 'company:home' %}" class="text-xl font-bold text-gray-900">JobPortal</a>
+                </div>
+
+                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-600">
+                    <span>Don’t have an account?</span>
+                    <a href="{% url 'account:signup' %}" class="font-semibold text-blue-600 hover:text-blue-700">Sign up</a>
+                </div>
+            </div>
+{% endblock %}
+
+{% block body %}
+<main class="flex-grow bg-gray-50 py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-200 grid grid-cols-1 lg:grid-cols-2">
+            <div class="bg-blue-600 text-white p-10 lg:p-14 flex flex-col justify-between">
+                <div>
+                    <span class="inline-flex items-center gap-2 uppercase tracking-[0.25em] text-xs font-semibold bg-white/10 px-3 py-2 rounded-full">
+                        Welcome Back
+                    </span>
+                    <h1 class="mt-8 text-2xl sm:text-4xl font-extrabold tracking-tight">
+                        Sign in to JobPortal
+                    </h1>
+                    <p class="mt-4 text-blue-100 text-sm leading-relaxed">
+                        Access your recruiter dashboard, manage job posts, and connect with applicants using the same modern portal theme.
+                    </p>
+                </div>
+                <div class="mt-10 text-sm text-blue-100/90">
+                    <p class="font-semibold">Need help?</p>
+                    <p class="mt-2">Contact support at <a href="mailto:support@jobportal.local" class="underline hover:text-white">support@jobportal.local</a></p>
+                </div>
+            </div>
+
+            <div class="p-8 lg:p-12">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Log in to your account</h2>
+                    <p class="mt-2 text-sm text-gray-500">Enter your credentials to continue.</p>
+                </div>
+
+                <form method="post" class="space-y-6 custom-form-style">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="space-y-4">
+                        {{ form.as_p }}
+                    </div>
+
+                    <button type="submit" class="w-full inline-flex justify-center items-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700">
+                        Log In
+                    </button>
+
+                </form>
+
+                <div class="my-6 flex items-center gap-3 text-xs text-gray-400"><span class="h-px flex-1 bg-gray-200"></span><span>OR</span><span class="h-px flex-1 bg-gray-200"></span></div>
+
+                <form method="post" action="{% url 'social:begin' 'google-oauth2' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full inline-flex items-center justify-center gap-3 rounded-2xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+                        <span class="text-lg font-bold text-red-500">G</span> Continue with Google
+                    </button>
+                </form>
+
+                    <p class="text-center text-sm text-gray-500">
+                        Don’t have an account? <a href="{% url 'account:signup' %}" class="font-semibold text-blue-600 hover:text-blue-700">Sign up</a>
+                    </p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock body %}

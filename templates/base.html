@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Job Portal{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- 1. NAVIGATION BAR -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% block nav %}
+        <div class="flex justify-between h-16 items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <a href="{% url 'company:home' %}" class="text-xl font-bold text-gray-900">JobPortal</a>
+            </div>
+
+            <!-- Nav Links (Desktop) -->
+            <div class="hidden md:flex items-center space-x-6 font-medium text-gray-600">
+                <a href="{% url 'company:home' %}" class="{% if request.resolver_match.url_name == 'home' %}text-blue-600 font-semibold{% else %}hover:text-blue-600 transition{% endif %}">Home</a>
+                {% if request.user.is_authenticated and request.user.role == 'employer' %}
+                    <a href="{% url 'company:jobs' %}" class="{% if request.resolver_match.url_name == 'jobs' %}text-blue-600 font-semibold{% else %}hover:text-blue-600 transition{% endif %}">All Jobs</a>
+                    <a href="{% url 'company:manage_jobs' %}" class="{% if request.resolver_match.url_name == 'manage_jobs' %}text-blue-600 font-semibold{% else %}hover:text-blue-600 transition{% endif %}">Manage Jobs</a>
+                {% else %}
+                    <a href="{% url 'company:jobs' %}" class="{% if request.resolver_match.url_name == 'jobs' %}text-blue-600 font-semibold{% else %}hover:text-blue-600 transition{% endif %}">Find Jobs</a>
+                    <a href="{% url 'company:companies' %}" class="{% if request.resolver_match.url_name == 'companies' %}text-blue-600 font-semibold{% else %}hover:text-blue-600 transition{% endif %}">Companies</a>
+                {% endif %}
+            </div>
+
+            <!-- Right Side: Action Buttons + Hamburger -->
+            <div class="flex items-center space-x-3">
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role == 'employer' %}
+                        <a href="{% url 'company:create' %}" class="hidden sm:inline-flex bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium transition shadow-sm">Post a Job</a>
+                    {% endif %}
+
+                    {% comment %} {% if request.user.is_authenticated and request.user.role == 'job_seeker' %} {% endcomment %}
+                    <!-- User Profile Badge & Avatar -->
+                        <a href="{% url 'profiles:profile' username=request.user.username %}" class="flex items-center gap-2 group py-1 pl-2 hover:bg-gray-100 rounded-lg transition">
+                            <span class="hidden sm:inline text-sm font-medium text-gray-700 group-hover:text-blue-600">
+                                Hi, {{ request.user.username }}
+                            </span>
+                            
+                            {% if request.user.profile.profile_picture %}
+                                <img src="{{ request.user.profile.profile_picture.url }}" 
+                                alt="{{ request.user.username }}" 
+                                class="h-9 w-9 rounded-full object-cover border border-gray-300 flex-shrink-0">
+                            {% else %}
+                                <div class="h-9 w-9 rounded-full border border-gray-300 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                                    {{ request.user.username|slice:":1"|upper }}
+                                </div>
+                        {% endif %}
+                    </a>
+                    {% comment %} {% endif %} {% endcomment %}
+                {% else %}
+                    <a href="{% url 'account:login' %}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md font-medium text-sm">Log In</a>
+                    <a href="{% url 'account:signup' %}" class="hidden sm:inline-flex text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md font-medium text-sm">SignUp</a>
+                {% endif %}
+
+                <!-- Hamburger Button (Mobile) -->
+                <button type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition" data-mobile-menu-btn aria-label="Toggle navigation menu" aria-expanded="false">
+                    <svg class="h-6 w-6" data-menu-icon-open fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg class="h-6 w-6 hidden" data-menu-icon-close fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="hidden md:hidden border-t border-gray-200 pb-4 pt-2" data-mobile-menu>
+            <div class="flex flex-col space-y-1">
+                <a href="{% url 'company:home' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium {% if request.resolver_match.url_name == 'home' %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition{% endif %}">Home</a>
+                {% if request.user.is_authenticated and request.user.role == 'employer' %}
+                    <a href="{% url 'company:jobs' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium {% if request.resolver_match.url_name == 'jobs' %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition{% endif %}">All Jobs</a>
+                    <a href="{% url 'company:manage_jobs' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium {% if request.resolver_match.url_name == 'manage_jobs' %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition{% endif %}">Manage Jobs</a>
+                    <a href="{% url 'company:create' %}" class="sm:hidden block px-3 py-2.5 rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition text-center mt-2">Post a Job</a>
+                {% else %}
+                    <a href="{% url 'company:jobs' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium {% if request.resolver_match.url_name == 'jobs' %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition{% endif %}">Find Jobs</a>
+                    <a href="{% url 'company:companies' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium {% if request.resolver_match.url_name == 'companies' %}text-blue-600 bg-blue-50{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition{% endif %}">Companies</a>
+                {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <div class="border-t border-gray-100 mt-2 pt-2 flex flex-col space-y-1">
+                        <a href="{% url 'account:login' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition">Log In</a>
+                        <a href="{% url 'account:signup' %}" class="block px-3 py-2.5 rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition text-center">Sign Up</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+</nav>
+
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        {% for message in messages %}
+        <div class="rounded-lg border px-4 py-3 text-sm {% if message.tags == 'error' %}border-red-200 bg-red-50 text-red-700{% else %}border-green-200 bg-green-50 text-green-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block body %}{% endblock %}
+
+    <!-- 4. FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-12 text-center text-sm text-gray-500">
+        © 2026 JobPortal Inc. All rights reserved.
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

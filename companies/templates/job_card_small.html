@@ -1,0 +1,74 @@
+{% load humanize %}
+{% load job_extras %}
+{%comment%}
+    =====================================================================
+    SMALL JOB CARD — Homepage
+    Compact variant: same design language, ~50% reduced height.
+    Shows only essential info: logo, title, company, salary, location,
+    work mode, employment type, posted time, max 4 skills, action buttons.
+    =====================================================================
+{%endcomment%}
+<article class="jc-sm" data-job-card>
+
+    <!-- TOP — Logo + Title + Company + Salary -->
+    <div class="jc-sm__top">
+        <a href="{% url 'profiles:profile' username=job.posted_by.username %}" class="jc-sm__logo" aria-label="View {{ job.company_name }} profile">
+            {% if job.posted_by.profile.company_logo %}
+                <img src="{{ job.posted_by.profile.company_logo.url }}" alt="{{ job.company_name }} logo">
+            {% elif job.posted_by.profile.profile_picture %}
+                <img src="{{ job.posted_by.profile.profile_picture.url }}" alt="{{ job.company_name }}">
+            {% else %}
+                <span class="jc-sm__logo-initial">{{ job.company_name|slice:":1"|upper }}</span>
+            {% endif %}
+        </a>
+        <div class="jc-sm__info">
+            <h3 class="jc-sm__title js-jobTitle">
+                <a href="{% url 'company:detail' job.pk %}">{{ job.job_title }}</a>
+            </h3>
+            <p class="jc-sm__company">{{ job.company_name }}</p>
+        </div>
+        <span class="jc-sm__salary">₹{{ job.job_stipend|intcomma }}</span>
+    </div>
+
+    <!-- META — Location, Work Mode, Employment Type -->
+    <div class="jc-sm__meta">
+        <span class="jc-sm__meta-item">
+            <span class="jc-sm__meta-icon">📍</span> {{ job.job_location|default:"Remote" }}
+        </span>
+        <span class="jc-sm__meta-item">
+            <span class="jc-sm__meta-icon">🏢</span> {{ job.get_work_mode_display }}
+        </span>
+        <span class="jc-sm__meta-item">
+            <span class="jc-sm__meta-icon">💼</span> {{ job.get_employment_type_display }}
+        </span>
+    </div>
+
+    <!-- SKILLS — Maximum 4 chips -->
+    {% if job.job_skills %}
+    <div class="jc-sm__skills" data-skills-container data-max-chips="4">
+        {% for skill in job.job_skills|split_skills %}
+            <span class="jc-sm__skill" data-skill>{{ skill }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- BOTTOM — Posted time + Action Buttons -->
+    <div class="jc-sm__bottom">
+        <span class="jc-sm__posted">🕒 Recently posted</span>
+        <div class="jc-sm__actions">
+            {% if request.user.is_authenticated and request.user.role == 'job_seeker' %}
+                {% if job.pk in submitted_job_ids %}
+                    <span class="jc-sm__btn jc-sm__btn--submitted">✓ Submitted</span>
+                {% else %}
+                    <a href="{% url 'company:apply' job.pk %}" class="jc-sm__btn jc-sm__btn--primary">Apply Now</a>
+                {% endif %}
+            {% elif request.user.is_authenticated and request.user == job.posted_by %}
+                <a href="{% url 'company:update' job.pk %}" class="jc-sm__btn jc-sm__btn--edit">✏️ Edit</a>
+            {% elif not request.user.is_authenticated %}
+                <a href="{% url 'account:login' %}" class="jc-sm__btn jc-sm__btn--primary">Apply Now</a>
+            {% endif %}
+            <a href="{% url 'company:detail' job.pk %}" class="jc-sm__btn jc-sm__btn--secondary">View Details</a>
+        </div>
+    </div>
+
+</article>

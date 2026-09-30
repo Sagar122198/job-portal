@@ -1,0 +1,961 @@
+/* ============================================================================
+   GLOBAL RESPONSIVE GUARDS
+   ============================================================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img, video, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================================================
+   FORM STYLES — Beautifies standard Django inputs rendered by {{ form.as_p }}
+   ============================================================================ */
+.custom-form-style p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.custom-form-style label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: capitalize;
+}
+
+.custom-form-style input,
+.custom-form-style textarea,
+.custom-form-style select {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    border: 1px solid #E5E7EB;
+    background-color: #F9FAFB;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.custom-form-style input:focus,
+.custom-form-style textarea:focus {
+    border-color: #2563EB;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* ============================================================================
+   DESIGN TOKENS
+   ============================================================================ */
+:root {
+    --jc-primary: #2563EB;
+    --jc-primary-hover: #1D4ED8;
+    --jc-primary-light: #EFF6FF;
+    --jc-primary-border: #DBEAFE;
+    --jc-bg: #FFFFFF;
+    --jc-page-bg: #F8FAFC;
+    --jc-text: #111827;
+    --jc-text-secondary: #6B7280;
+    --jc-text-muted: #9CA3AF;
+    --jc-border: #E5E7EB;
+    --jc-border-light: #F3F4F6;
+    --jc-radius: 20px;
+    --jc-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    --jc-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+    --jc-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --jc-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================================
+   LARGE HORIZONTAL JOB CARD  (.jc)  —  Find Jobs Page
+   ============================================================================ */
+.jc {
+    display: grid;
+    grid-template-columns: 22% 78%;
+    width: 100%;
+    min-height: 320px;
+    border-radius: var(--jc-radius);
+    background: var(--jc-bg);
+    border: 1px solid var(--jc-border);
+    box-shadow: var(--jc-shadow);
+    font-family: var(--jc-font);
+    color: var(--jc-text);
+    overflow: hidden;
+    transition: transform var(--jc-transition), box-shadow var(--jc-transition);
+}
+
+.jc:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--jc-shadow-hover);
+}
+
+/* ---------- LEFT PANEL ---------- */
+.jc__left {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 24px;
+    border-right: 1px solid var(--jc-border);
+    background: linear-gradient(180deg, #FAFBFD 0%, #FFFFFF 100%);
+}
+
+.jc__logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--jc-primary-light);
+    border: 1px solid var(--jc-primary-border);
+    flex-shrink: 0;
+    transition: transform var(--jc-transition);
+}
+
+.jc__logo:hover {
+    transform: scale(1.05);
+}
+
+.jc__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.jc__logo-initial {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--jc-primary);
+    line-height: 1;
+}
+
+.jc__company-name {
+    margin-top: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--jc-text);
+    line-height: 1.3;
+}
+
+.jc__company-facts {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12px;
+    color: var(--jc-text-secondary);
+    line-height: 1.3;
+}
+
+.jc__company-facts li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.jc__company-facts li .jc__fact-icon {
+    flex-shrink: 0;
+    width: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.jc__posted {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 11px;
+    color: var(--jc-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ---------- RIGHT PANEL ---------- */
+.jc__right {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 28px 24px;
+    min-width: 0;
+}
+
+/* Row 1 — Header */
+.jc__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+}
+
+.jc__header-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.jc__badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.jc__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+}
+
+.jc__badge--new {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.jc__badge--featured {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.jc__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--jc-text);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.jc__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--jc-transition);
+}
+
+.jc__title a:hover {
+    color: var(--jc-primary);
+}
+
+.jc__header-right {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.jc__salary {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--jc-text);
+    white-space: nowrap;
+    margin-left: 12px;
+}
+
+.jc__icon-btn {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--jc-border);
+    border-radius: 10px;
+    background: var(--jc-bg);
+    color: var(--jc-text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all var(--jc-transition);
+    position: relative;
+    padding: 0;
+}
+
+.jc__icon-btn:hover {
+    background: var(--jc-primary-light);
+    border-color: var(--jc-primary-border);
+    color: var(--jc-primary);
+    transform: scale(1.08);
+}
+
+/* Save/heart animation */
+.jc__icon-btn--save.is-saved {
+    color: #EF4444;
+    border-color: #FECACA;
+    background: #FEF2F2;
+}
+
+.jc__icon-btn--save.is-saved .jc__heart {
+    animation: jc-heart-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes jc-heart-pop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.35); }
+    100% { transform: scale(1); }
+}
+
+/* Copy tooltip */
+.jc__icon-btn .jc__tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.9);
+    background: var(--jc-text);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.jc__icon-btn .jc__tooltip.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* Row 2 — Metadata */
+.jc__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--jc-text-secondary);
+}
+
+.jc__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 8px;
+    background: #F9FAFB;
+    border: 1px solid var(--jc-border-light);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background var(--jc-transition);
+}
+
+.jc__meta-item:hover {
+    background: var(--jc-primary-light);
+}
+
+.jc__meta-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
+/* Row 3 — Divider */
+.jc__divider {
+    margin: 14px 0;
+    border: 0;
+    border-top: 1px solid var(--jc-border-light);
+}
+
+/* Row 4 — Summary */
+.jc__summary {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--jc-text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* Row 5 — Skills */
+.jc__skills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.jc__skill {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    background: var(--jc-primary-light);
+    border: 1px solid var(--jc-primary-border);
+    color: var(--jc-primary);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all var(--jc-transition);
+    cursor: default;
+}
+
+.jc__skill:hover {
+    background: var(--jc-primary-border);
+}
+
+.jc__skill--more {
+    background: #F3F4F6;
+    border-color: var(--jc-border);
+    color: var(--jc-text-secondary);
+    font-weight: 700;
+}
+
+/* Row 6 — Footer */
+.jc__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 16px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.jc__footer-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--jc-text-muted);
+    flex-wrap: wrap;
+}
+
+.jc__footer-info span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.jc__footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.jc__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 24px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: var(--jc-font);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all var(--jc-transition);
+    white-space: nowrap;
+}
+
+.jc__btn--primary {
+    background: var(--jc-primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.jc__btn--primary:hover {
+    background: var(--jc-primary-hover);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+    transform: translateY(-1px);
+}
+
+.jc__btn--secondary {
+    background: var(--jc-bg);
+    color: var(--jc-primary);
+    border: 1px solid var(--jc-primary-border);
+}
+
+.jc__btn--secondary:hover {
+    background: var(--jc-primary-light);
+    border-color: var(--jc-primary);
+}
+
+.jc__btn--submitted {
+    background: var(--jc-primary-light);
+    color: var(--jc-primary);
+    border: 1px solid var(--jc-primary-border);
+    cursor: default;
+    pointer-events: none;
+}
+
+.jc__btn--edit {
+    background: #FFF7ED;
+    color: #EA580C;
+    border: 1px solid #FED7AA;
+}
+
+.jc__btn--edit:hover {
+    background: #FFEDD5;
+    border-color: #FB923C;
+}
+
+/* ============================================================================
+   SMALL JOB CARD  (.jc-sm)  —  Homepage
+   ============================================================================ */
+.jc-sm {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    border-radius: var(--jc-radius);
+    background: var(--jc-bg);
+    border: 1px solid var(--jc-border);
+    box-shadow: var(--jc-shadow);
+    font-family: var(--jc-font);
+    color: var(--jc-text);
+    overflow: hidden;
+    padding: 24px;
+    transition: transform var(--jc-transition), box-shadow var(--jc-transition);
+}
+
+.jc-sm:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--jc-shadow-hover);
+}
+
+/* Top section — Logo + Title + Salary */
+.jc-sm__top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.jc-sm__logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--jc-primary-light);
+    border: 1px solid var(--jc-primary-border);
+    flex-shrink: 0;
+}
+
+.jc-sm__logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.jc-sm__logo-initial {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--jc-primary);
+}
+
+.jc-sm__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.jc-sm__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--jc-text);
+    line-height: 1.3;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.jc-sm__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--jc-transition);
+}
+
+.jc-sm__title a:hover {
+    color: var(--jc-primary);
+}
+
+.jc-sm__company {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--jc-text-secondary);
+    margin-top: 3px;
+}
+
+.jc-sm__salary {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--jc-text);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 12px;
+}
+
+/* Meta row */
+.jc-sm__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.jc-sm__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 7px;
+    background: #F9FAFB;
+    border: 1px solid var(--jc-border-light);
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--jc-text-secondary);
+    white-space: nowrap;
+}
+
+.jc-sm__meta-icon {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+/* Skills */
+.jc-sm__skills {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.jc-sm__skill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: var(--jc-primary-light);
+    border: 1px solid var(--jc-primary-border);
+    color: var(--jc-primary);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.jc-sm__skill--more {
+    background: #F3F4F6;
+    border-color: var(--jc-border);
+    color: var(--jc-text-secondary);
+    font-weight: 700;
+}
+
+/* Bottom row */
+.jc-sm__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--jc-border-light);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.jc-sm__posted {
+    font-size: 11.5px;
+    color: var(--jc-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.jc-sm__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.jc-sm__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: var(--jc-font);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all var(--jc-transition);
+    white-space: nowrap;
+}
+
+.jc-sm__btn--primary {
+    background: var(--jc-primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.jc-sm__btn--primary:hover {
+    background: var(--jc-primary-hover);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}
+
+.jc-sm__btn--secondary {
+    background: var(--jc-bg);
+    color: var(--jc-primary);
+    border: 1px solid var(--jc-primary-border);
+}
+
+.jc-sm__btn--secondary:hover {
+    background: var(--jc-primary-light);
+    border-color: var(--jc-primary);
+}
+
+.jc-sm__btn--submitted {
+    background: var(--jc-primary-light);
+    color: var(--jc-primary);
+    border: 1px solid var(--jc-primary-border);
+    cursor: default;
+    pointer-events: none;
+}
+
+.jc-sm__btn--edit {
+    background: #FFF7ED;
+    color: #EA580C;
+    border: 1px solid #FED7AA;
+}
+
+.jc-sm__btn--edit:hover {
+    background: #FFEDD5;
+    border-color: #FB923C;
+}
+
+/* ============================================================================
+   MORE OPTIONS DROPDOWN
+   ============================================================================ */
+.jc__more-wrap {
+    position: relative;
+}
+
+.jc__more-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 160px;
+    background: var(--jc-bg);
+    border: 1px solid var(--jc-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    padding: 6px;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px) scale(0.97);
+    transition: opacity 0.18s, transform 0.18s;
+}
+
+.jc__more-dropdown.is-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.jc__more-dropdown a,
+.jc__more-dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 0;
+    background: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--jc-text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--jc-transition), color var(--jc-transition);
+    font-family: var(--jc-font);
+    text-align: left;
+}
+
+.jc__more-dropdown a:hover,
+.jc__more-dropdown button:hover {
+    background: var(--jc-primary-light);
+    color: var(--jc-primary);
+}
+
+/* ============================================================================
+   RESPONSIVE — LARGE CARD
+   ============================================================================ */
+@media (max-width: 1023px) {
+    .jc {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .jc__left {
+        border-right: 0;
+        border-bottom: 1px solid var(--jc-border);
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 24px;
+        flex-wrap: wrap;
+    }
+
+    .jc__logo {
+        width: 56px;
+        height: 56px;
+    }
+
+    .jc__company-name {
+        margin-top: 0;
+    }
+
+    .jc__company-facts {
+        display: flex;
+        gap: 12px;
+        margin: 0;
+        flex-wrap: wrap;
+    }
+
+    .jc__company-facts li {
+        margin-bottom: 0;
+    }
+
+    .jc__posted {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .jc__title {
+        font-size: 20px;
+    }
+
+    .jc__salary {
+        font-size: 18px;
+    }
+
+    .jc__header {
+        flex-wrap: wrap;
+    }
+
+    .jc__header-right {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 8px;
+    }
+
+    .jc__salary {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 639px) {
+    .jc__left {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jc__right {
+        padding: 20px;
+    }
+
+    .jc__header {
+        flex-direction: column;
+    }
+
+    .jc__header-right {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .jc__footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jc__footer-actions {
+        width: 100%;
+    }
+
+    .jc__btn {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .jc__meta {
+        gap: 4px;
+    }
+    
+    .jc__meta-item {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+}
+
+/* ============================================================================
+   RESPONSIVE — SMALL CARD
+   ============================================================================ */
+@media (max-width: 639px) {
+    .jc-sm__top {
+        flex-direction: column;
+    }
+
+    .jc-sm__salary {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .jc-sm__bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jc-sm__actions {
+        width: 100%;
+    }
+
+    .jc-sm__btn {
+        flex: 1;
+    }
+}
+
+/* ============================================================================
+   UTILITY — search bar focus ring override (home page)
+   ============================================================================ */
+.js-jobSearchbar:focus {
+    outline: none;
+    box-shadow: none;
+}
