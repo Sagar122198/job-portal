@@ -43,17 +43,14 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy project source code
 COPY . .
 
+# Make entrypoint script executable
+RUN chmod +x entrypoint.sh
+
 # Collect static files at build time (needs SECRET_KEY set to any dummy value)
 RUN SECRET_KEY=build-placeholder DJANGO_SETTINGS_MODULE=job_portal.settings_prod \
     python manage.py collectstatic --noinput
 
-# Switch to the non-root user
-USER app
-
 # Render injects the PORT env var at runtime (defaults to 10000)
 EXPOSE 10000
 
-CMD ["gunicorn", "job_portal.wsgi:application", \
-     "--bind", "0.0.0.0:10000", \
-     "--workers", "2", \
-     "--timeout", "120"]
+CMD ["./entrypoint.sh"]
