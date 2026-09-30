@@ -61,6 +61,9 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+# Force social-auth to build https:// callback URLs behind the proxy
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
 # ---------------------------------------------------------------------------
 # Logging — print everything to stdout so Render can capture it
 # ---------------------------------------------------------------------------
